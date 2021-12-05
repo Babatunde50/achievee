@@ -1,30 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
-	// "time"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
-	mux := http.NewServeMux()
+	router := httprouter.New()
 
-	// TODO: Handle static files
+	// Handles static files
+	router.ServeFiles("/static/*filepath", http.Dir("public"))
 
 	// all routes patterns matched here
+	router.GET("/", index)
 
-	mux.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		fmt.Fprintf(writer, "Hello! This is the index page!!!!")
-	})
-
-	// server configuration and start
-	server := &http.Server{
-		Addr:    "localhost:8081",
-		Handler: mux,
-		// ReadTimeout:    time.Duration(config.ReadTimeout * int64(time.Second)),
-		// WriteTimeout:   time.Duration(config.WriteTimeout * int64(time.Second)),
-		MaxHeaderBytes: 1 << 20,
-	}
-
-	server.ListenAndServe()
+	http.ListenAndServe(":8081", router)
 }
