@@ -3,7 +3,7 @@
 <h1 class="title is-4 has-text-centered">Achivee</h1>
 
 <div class="container is-max-desktop auth-container">
-  <div class="columns is-desktop">
+  <div class="columns is-desktop" style="padding: 2rem" >
     <div class="column is-flex is-hidden-mobile is-hidden-tablet-only">
       <img src="/static/images/approvee.png" />
     </div>
@@ -11,14 +11,14 @@
       <h1 class="title is-1">Achieve <span class="has-text-weight-normal" > Anything </span> </h1>
       <div class="tabs is-centered">
         <ul>
-          <li class="is-active">
+          <li id="sign-up-tab" class="is-active">
             <a>
               <span class="icon is-small">
               </span>
               <span>Sign Up</span>
             </a>
           </li>
-          <li>
+          <li id="log-in-tab">
             <a>
               <span class="icon is-small">
               </span>
@@ -28,40 +28,46 @@
         </ul>
       </div>
 
-      <div class="container">
-        <div class="field">
+      <form class="container" id="auth-form" style="max-width: 500px;" >
+        <div class="field" id="firstNameField">
           <label class="label">First Name</label>
           <div class="control">
-            <input class="input" type="text" placeholder="First Name" />
+            <input required minlength="2" class="input" value="" id="firstName" type="text" placeholder="First Name" />
           </div>
         </div>
-        <div class="field">
+        <div class="field" id="lastNameField">
           <label class="label">Last Name</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Last Name" />
+            <input required minlength="2"  value="" class="input" id="lastName" type="text" placeholder="Last Name" />
           </div>
         </div>
         <div class="field">
           <label class="label"> Email </label>
           <div class="control">
-            <input class="input" type="text" placeholder="Email" />
+            <input value=""  class="input" id="email" type="email" required  placeholder="Email" />
           </div>
         </div>
         <div class="field">
           <label class="label">Password</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Password" />
+            <input value="" required minlength="6" class="input" id="password" type="text" placeholder="Password" />
           </div>
         </div>
-        <div class="field">
+        <div class="field" id="confirmPasswordField">
           <label class="label"> Confirm Password </label>
           <div class="control">
-            <input class="input" type="text" placeholder="Confirm Password" />
+            <input id="confirmPassword" required minlength="2" value="" class="input"  type="text" placeholder="Confirm Password" />
           </div>
+        </div>
+        <div class="is-hidden" id="error-message" > </div>
+        <div class="field"> 
+          <button id="signup" type="submit" class="button is-outlined is-fullwidth is-link is-rounded">Rounded</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script src="/static/js/auth.js" > </script>
 
 {{end}}
