@@ -26,3 +26,18 @@ func respond(w http.ResponseWriter, data map[string]interface{}, statusCode int)
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(data)
 }
+
+// func session(writer http.ResponseWriter, request *http.Request) (sess data.Session, err error) {
+// 	cookie, err := request.Cookie("_auth_cookie")
+
+// 	fmt.Println(cookie, err.Error())
+
+// 	if err == nil {
+// 		sess = data.Session{Uuid: cookie.Value}
+// 		if ok, _ := sess.Check(); !ok {
+// 			err = errors.New("invalid session")
+// 		}
+// 	}
+
+// 	return
+// }

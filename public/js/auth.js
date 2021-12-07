@@ -39,16 +39,31 @@ const clearFormValues = () => {
 
 const signUp = async (firstName, lastName, email, password) => {
   try {
-    const response = await axios.post('http://localhost:8081/api/signup', {
+    const response = await axios.post('/api/signup', {
       email,
       password,
       firstName,
       lastName,
     });
 
-    console.log(response);
-
     loginTab.click();
+  } catch (err) {
+    console.log(err, 'error!!!');
+    showErrorMessage(err.response.data.message);
+  }
+};
+
+const login = async (email, password) => {
+  try {
+    const response = await axios.post('/api/login', {
+      email,
+      password,
+    }, {
+      headers: {
+        withCredentials: true
+      }
+    } );
+    window.location.assign("/planner")
   } catch (err) {
     showErrorMessage(err.response.data.message);
   }
@@ -57,19 +72,29 @@ const signUp = async (firstName, lastName, email, password) => {
 document.getElementById('auth-form').addEventListener('submit', (e) => {
   e.preventDefault();
 
-  const firstName = firstNameElem.value;
-  const lastName = lastNameElem.value;
+  let firstName;
+  let lastName;
+  let confirmPassword;
+
+  if (submitBtnElem.id !== 'login') {
+    firstName = firstNameElem.value;
+    lastName = lastNameElem.value;
+    confirmPassword = confirmPasswordElem.value;
+  }
+
   const email = emailElem.value;
   const password = passwordElem.value;
-  const confirmPassword = confirmPasswordElem.value;
 
-  if (password.trim() !== confirmPassword.trim()) {
+  if (
+    submitBtnElem.id !== 'login' &&
+    password.trim() !== confirmPassword.trim()
+  ) {
     showErrorMessage('password and confirm password do not match');
     return;
   }
 
   submitBtnElem.id === 'login'
-    ? ''
+    ? login(email, password)
     : signUp(firstName, lastName, email, password);
 });
 
@@ -86,6 +111,8 @@ signUpTab.addEventListener('click', (e) => {
 
   submitBtnElem.id = 'signup';
 
+  submitBtnElem.textContent = "Sign Up"
+
   clearFormValues();
 });
 
@@ -98,6 +125,8 @@ loginTab.addEventListener('click', (e) => {
   confirmPasswordFieldElem.classList.add('is-hidden');
 
   submitBtnElem.id = 'login';
+
+  submitBtnElem.textContent = "Login"
 
   clearFormValues();
 });

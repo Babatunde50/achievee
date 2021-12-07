@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -16,11 +17,14 @@ func main() {
 
 	// PAGES
 	router.GET("/", index)
+	router.GET("/planner", planner)
 
 	// APIS
 
 	// AUTH
 	router.POST("/api/signup", signup)
+	router.POST("/api/login", login)
+	router.POST("/api/logout", logout)
 
-	http.ListenAndServe(":8081", router)
+	http.ListenAndServe(":8081", cors.Default().Handler(router))
 }
