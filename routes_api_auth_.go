@@ -100,9 +100,12 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	cookie := http.Cookie{
-		Name:     "_auth_cookie",
+		Name:     "_cookie",
 		Value:    session.Uuid,
+		MaxAge:   7000,
 		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   false,
 	}
 
 	http.SetCookie(w, &cookie)
@@ -114,7 +117,7 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	cookie, err := r.Cookie("_auth_cookie")
+	cookie, err := r.Cookie("_cookie")
 
 	fmt.Println(cookie, "cookie", err.Error(), "error")
 

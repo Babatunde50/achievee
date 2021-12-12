@@ -1,7 +1,190 @@
 {{ define "content" }}
 
-<h1 class="title is-4 has-text-centered">Planner!!!</h1>
+<div class="container">
+  <div class="columns">
+    <div class="column">
+      <h3 class="title mb-0">
+        tasks <span class="material-icons" id="add-task"> add </span>
+      </h3>
+      <nav class="navbar" role="navigation">
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item"> today </a>
+            <a class="navbar-item"> next 7 days </a>
+            <a class="navbar-item"> all </a>
+          </div>
+        </div>
+      </nav>
+      <div class="task-container">
+        <div
+          class="is-flex is-justify-content-space-between is-align-items-center"
+          style="width: 100%"
+        >
+          <div>
+            <div class="pretty p-switch p-slim p-smooth">
+              <input type="checkbox" />
+              <div class="state p-success">
+                <label class="pl-2 has-text-weight-semibold is-size-6">
+                  C programming Read</label
+                >
+              </div>
+            </div>
 
+            <p class="is-size-7">
+              <span class="material-icons is-size-7"> calendar_today </span> 08
+              nov (34 days ago)
+            </p>
+          </div>
+          <div>
+            <span class="material-icons is-size-6"> more_vert </span>
+            <span class="material-icons is-size-6"> arrow_forward_ios </span>
+          </div>
+        </div>
+        <div
+          class="
+            is-flex is-justify-content-space-between is-align-items-center
+            mt-2
+          "
+          style="width: 50%"
+        >
+          <span class="material-icons is-size-4"> add </span>
+          <input
+            class="input is-small sub-input"
+            type="text"
+            placeholder="add sub tasks"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <h3 class="title mb-0">
+        routines <span class="material-icons"> add </span>
+      </h3>
+      <nav class="navbar" role="navigation">
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item"> today </a>
+            <a class="navbar-item"> all </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="column">
+      <h3 class="title mb-0">
+        goals <span class="material-icons"> add </span>
+      </h3>
+      <nav class="navbar" role="navigation">
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item"> upcoming </a>
+            <a class="navbar-item"> all </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
 
+<div class="modal" id="add-task-modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title is-size-6">New Task</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div>
+        <label> Title </label>
+        <input class="input" type="text" placeholder="Text input" />
+      </div>
+      <div class="mt-4 mb-2">
+        <p class="is-size-7">
+          <span class="material-icons is-size-7"> local_offer </span> Color tag
+        </p>
+        <div class="pretty p-icon p-round">
+          <input type="radio" name="icon_solid" />
+          <div class="state p-primary">
+            <i class="icon mdi mdi-check"></i>
+            <label>New York</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input type="radio" name="icon_solid" />
+          <div class="state p-success">
+            <i class="icon mdi mdi-check"></i>
+            <label>Paris</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input type="radio" name="icon_solid" />
+          <div class="state p-info">
+            <i class="icon mdi mdi-check"></i>
+            <label>Dubai</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input type="radio" name="icon_solid" />
+          <div class="state p-warning">
+            <i class="icon mdi mdi-check"></i>
+            <label>Tokyo</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input type="radio" name="icon_solid" />
+          <div class="state p-danger">
+            <i class="icon mdi mdi-check"></i>
+            <label>Istanbul</label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <p class="is-size-7">
+          <span class="material-icons is-size-7"> calendar_today </span>
+          Deadline
+        </p>
+        <div class="pretty p-default p-round">
+          <input type="radio" name="radio1" />
+          <div class="state">
+            <label>today</label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input type="radio" name="radio1" />
+          <div class="state">
+            <label>tomorrow</label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input type="radio" name="radio1" />
+          <div class="state">
+            <label> soon </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input type="radio" name="radio1" />
+          <div class="state">
+            <label> someday </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input type="radio" name="radio1" />
+          <div class="state">
+            <label> specific day </label>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success">Save</button>
+    </footer>
+  </div>
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<script src="/static/js/planner.js"></script>
 
 {{end}}

@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
+	"todo-app/data"
 )
 
 func generateHTML(writer http.ResponseWriter, data interface{}, filenames ...string) {
@@ -23,21 +25,27 @@ func message(status bool, message string) map[string]interface{} {
 
 func respond(w http.ResponseWriter, data map[string]interface{}, statusCode int) {
 	w.Header().Add("Content-Type", "application/json")
+
+	// cookie := http.Cookie{
+	// 	Name:     "_test_cookie",
+	// 	Value:    "123123",
+	// 	HttpOnly: true,
+	// }
+
 	w.WriteHeader(statusCode)
+	// http.SetCookie(w, &cookie)
 	json.NewEncoder(w).Encode(data)
 }
 
-// func session(writer http.ResponseWriter, request *http.Request) (sess data.Session, err error) {
-// 	cookie, err := request.Cookie("_auth_cookie")
+func session(writer http.ResponseWriter, request *http.Request) (sess data.Session, err error) {
+	cookie, err := request.Cookie("_cookie")
 
-// 	fmt.Println(cookie, err.Error())
+	if err == nil {
+		sess = data.Session{Uuid: cookie.Value}
+		if ok, _ := sess.Check(); !ok {
+			err = errors.New("invalid session")
+		}
+	}
 
-// 	if err == nil {
-// 		sess = data.Session{Uuid: cookie.Value}
-// 		if ok, _ := sess.Check(); !ok {
-// 			err = errors.New("invalid session")
-// 		}
-// 	}
-
-// 	return
-// }
+	return
+}

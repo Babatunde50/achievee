@@ -55,14 +55,20 @@ const signUp = async (firstName, lastName, email, password) => {
 
 const login = async (email, password) => {
   try {
-    const response = await axios.post('/api/login', {
-      email,
-      password,
-    }, {
-      headers: {
-        withCredentials: true
+    const response = await axios.post(
+      '/api/login',
+      {
+        email,
+        password,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
       }
-    } );
+    );
     window.location.assign("/planner")
   } catch (err) {
     showErrorMessage(err.response.data.message);
@@ -111,7 +117,7 @@ signUpTab.addEventListener('click', (e) => {
 
   submitBtnElem.id = 'signup';
 
-  submitBtnElem.textContent = "Sign Up"
+  submitBtnElem.textContent = 'Sign Up';
 
   clearFormValues();
 });
@@ -126,7 +132,7 @@ loginTab.addEventListener('click', (e) => {
 
   submitBtnElem.id = 'login';
 
-  submitBtnElem.textContent = "Login"
+  submitBtnElem.textContent = 'Login';
 
   clearFormValues();
 });

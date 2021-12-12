@@ -1,5 +1,44 @@
 .auth-container {
-    border-radius: 1rem;
-    box-shadow: 5px 6px 29px -9px rgba(0,0,0,0.6);
-    padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 5px 6px 29px -9px rgba(0, 0, 0, 0.6);
+  padding: 1rem;
 }
+
+.task-container {
+  display: block;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: #e91e61;
+  color: white;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.sub-input {
+    background-color: #e91e61;
+    border-color: #e91e61;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.sub-input:hover, .sub-input:focus, .sub-input:active {
+    border-color: #e91e61;
+    outline: none;
+    box-shadow: 3px -2px 11px -5px rgba(0,0,0,0.74);
+}
+
+.sub-input::placeholder {
+    color: white;
+}
+
+#add-task {
+    cursor: pointer;
+}
+
+
+#add-task:hover {
+    color: yellow;
+}
+
+
