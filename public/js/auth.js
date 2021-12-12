@@ -39,12 +39,16 @@ const clearFormValues = () => {
 
 const signUp = async (firstName, lastName, email, password) => {
   try {
-    const response = await axios.post('/api/signup', {
-      email,
-      password,
-      firstName,
-      lastName,
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      body: JSON.stringify({ email, password, firstName, lastName }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true
     });
+    const response = await res.json();
+    console.log(response, 'RESPONSE!!!');
 
     loginTab.click();
   } catch (err) {
@@ -55,20 +59,17 @@ const signUp = async (firstName, lastName, email, password) => {
 
 const login = async (email, password) => {
   try {
-    const response = await axios.post(
-      '/api/login',
-      {
-        email,
-        password,
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      headers: {
+        'Content-Type': 'application/json',
       },
-      {
-        withCredentials: true,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+      withCredentials: true
+    });
+    const response = await res.json();
+    console.log(response, 'RESPONSE!!!');
+
     window.location.assign("/planner")
   } catch (err) {
     showErrorMessage(err.response.data.message);

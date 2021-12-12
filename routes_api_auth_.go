@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"time"
 	"todo-app/data"
 
 	"github.com/julienschmidt/httprouter"
@@ -69,6 +69,7 @@ func signup(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 // POST -> Login
 func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+
 	loginData := LoginData{}
 
 	err := json.NewDecoder(r.Body).Decode(&loginData)
@@ -92,7 +93,10 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 
-	session, err := user.CreateSession()
+	// create a new random session token
+	sessionToken := createUUID()
+
+	_, err = cache.Do("SETEX", sessionToken, "300", user.Email)
 
 	if err != nil {
 		respond(w, message(false, err.Error()), http.StatusInternalServerError)
@@ -100,38 +104,76 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	cookie := http.Cookie{
-		Name:     "_cookie",
-		Value:    session.Uuid,
-		MaxAge:   7000,
+		Name:     "session_token",
+		Value:    sessionToken,
 		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-		Secure:   false,
+		Expires:  time.Now().Add(7 * time.Hour),
+		Path:     "/",
 	}
 
 	http.SetCookie(w, &cookie)
 
 	resp := message(true, "Successful")
-	resp["session"] = session
+	resp["data"] = user
 
 	respond(w, resp, http.StatusOK)
 }
 
-func logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	cookie, err := r.Cookie("_cookie")
+func refreshToken(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	sessionToken, userEmail, err := session(w, r)
 
-	fmt.Println(cookie, "cookie", err.Error(), "error")
-
-	if err != http.ErrNoCookie {
-		session := data.Session{Uuid: cookie.Value}
-		err = session.DeleteByUUID()
-
-		if err != nil {
-			respond(w, message(false, err.Error()), http.StatusInternalServerError)
-			return
-		}
-
-		respond(w, message(true, "Logout successfully"), http.StatusInternalServerError)
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusUnauthorized)
+		return
 	}
 
-	respond(w, message(false, err.Error()), http.StatusBadRequest)
+	newSessionToken := createUUID()
+
+	_, err = cache.Do("SETEX", newSessionToken, "300", userEmail)
+
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	// Delete the older session token
+	_, err = cache.Do("DEL", sessionToken)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "session_token",
+		Value:   newSessionToken,
+		Expires: time.Now().Add(300 * time.Second),
+	})
+}
+
+func logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	sessionToken, _, err := session(w, r)
+
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusUnauthorized)
+		return
+	}
+
+	// Delete the session from cache
+	_, err = cache.Do("DEL", sessionToken)
+
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	cookie := http.Cookie{
+		Name:    "session_token",
+		Value:   "",
+		Expires: time.Unix(0, 0),
+	}
+
+	http.SetCookie(w, &cookie)
+
+	respond(w, message(true, "logout successs"), http.StatusOK)
 }

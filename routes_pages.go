@@ -1,8 +1,6 @@
 package main
 
 import (
-	// "fmt"
-	// "fmt"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -16,13 +14,12 @@ func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 // PLANNER -> authenticated index page
 func planner(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	_, err := r.Cookie("session_token")
 
-	// _, err := session(w, r)
-
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// 	http.Redirect(w, r, "/", http.StatusPermanentRedirect)
-	// }
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+		return
+	}
 
 	generateHTML(w, nil, "layout", "planner")
 }

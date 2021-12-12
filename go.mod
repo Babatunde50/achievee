@@ -8,4 +8,7 @@ require (
 	golang.org/x/crypto v0.0.0-20211202192323-5770296d904e
 )
 
-require github.com/rs/cors v1.8.0 // indirect
+require (
+	github.com/gomodule/redigo v1.8.6 // indirect
+	github.com/rs/cors v1.8.0 // indirect
+)
