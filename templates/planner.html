@@ -15,45 +15,85 @@
           </div>
         </div>
       </nav>
-      <div class="task-container">
-        <div
-          class="is-flex is-justify-content-space-between is-align-items-center"
-          style="width: 100%"
-        >
-          <div>
-            <div class="pretty p-switch p-slim p-smooth">
-              <input type="checkbox" />
-              <div class="state p-success">
-                <label class="pl-2 has-text-weight-semibold is-size-6">
-                  C programming Read</label
-                >
-              </div>
-            </div>
 
-            <p class="is-size-7">
-              <span class="material-icons is-size-7"> calendar_today </span> 08
-              nov (34 days ago)
-            </p>
+      <div>
+        {{ range . }}
+
+        <div class="task-container" style="background-color: {{ .ColorTag }}">
+          <div
+            class="
+              is-flex is-justify-content-space-between is-align-items-center
+            "
+            style="width: 100%"
+          >
+            <div>
+              <div class="pretty p-switch p-slim p-smooth">
+                <input
+                  id="{{ .Id }}"
+                  class="task-complete"
+                  type="checkbox"
+                  {{if
+                  .Completed
+                  }}checked{{end}}
+                />
+                <div class="state p-success">
+                  <label
+                    class="pl-2 has-text-weight-semibold is-size-6 {{if .Completed }}completed{{end}}"
+                    id="task-{{.Id}}"
+                  >
+                    {{ .Title }}
+                  </label>
+                </div>
+              </div>
+
+              <p class="is-size-7">
+                <span class="material-icons is-size-7"> calendar_today </span>
+                {{/* 08 nov (34 days ago) */}} {{ .Deadline }}
+              </p>
+            </div>
+            <div>
+              {{/*
+              <span class="material-icons is-size-6"> more_vert </span> */}}
+              <span
+                data-task-id="{{.Id}}"
+                class="material-icons is-size-6 task-delete"
+              >
+                delete
+              </span>
+              <span
+                data-task-id="{{.Id}}"
+                data-task-deadline="{{.Deadline}}"
+                data-task-title="{{.Title}}"
+                data-task-color-tag="{{.ColorTag}}"
+                class="material-icons is-size-6 task-edit"
+              >
+                arrow_forward_ios
+              </span>
+            </div>
           </div>
-          <div>
-            <span class="material-icons is-size-6"> more_vert </span>
-            <span class="material-icons is-size-6"> arrow_forward_ios </span>
+          <div
+            class="
+              is-flex is-justify-content-space-between is-align-items-center
+              mt-2
+              is-hidden
+            "
+            id="sub-task-container"
+            style="width: 50%"
+          >
+            <span class="material-icons is-size-4"> add </span>
+            <input
+              class="input is-small sub-input"
+              type="text"
+              placeholder="add sub tasks"
+              style="width: 100%; background-color: {{ .ColorTag }}; border-color: {{ .ColorTag }};"
+            />
           </div>
         </div>
-        <div
-          class="
-            is-flex is-justify-content-space-between is-align-items-center
-            mt-2
-          "
-          style="width: 50%"
-        >
-          <span class="material-icons is-size-4"> add </span>
-          <input
-            class="input is-small sub-input"
-            type="text"
-            placeholder="add sub tasks"
-          />
-        </div>
+
+        {{ else }}
+
+        <p>Nothing to show</p>
+        {{ end }}
       </div>
     </div>
     <div class="column">
@@ -87,22 +127,32 @@
 
 <div class="modal" id="add-task-modal">
   <div class="modal-background"></div>
-  <div class="modal-card">
+  <form id="add-task-form" class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title is-size-6">New Task</p>
-      <button class="delete" aria-label="close"></button>
+      {{/* <button class="delete" aria-label="close"></button> */}}
     </header>
     <section class="modal-card-body">
       <div>
         <label> Title </label>
-        <input class="input" type="text" placeholder="Text input" />
+        <input
+          id="add-task-form-title"
+          class="input"
+          type="text"
+          placeholder="Text input"
+        />
       </div>
       <div class="mt-4 mb-2">
         <p class="is-size-7">
           <span class="material-icons is-size-7"> local_offer </span> Color tag
         </p>
         <div class="pretty p-icon p-round">
-          <input type="radio" name="icon_solid" />
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#428ACA"
+          />
           <div class="state p-primary">
             <i class="icon mdi mdi-check"></i>
             <label>New York</label>
@@ -110,7 +160,12 @@
         </div>
 
         <div class="pretty p-icon p-round">
-          <input type="radio" name="icon_solid" />
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#5CB85B"
+          />
           <div class="state p-success">
             <i class="icon mdi mdi-check"></i>
             <label>Paris</label>
@@ -118,7 +173,12 @@
         </div>
 
         <div class="pretty p-icon p-round">
-          <input type="radio" name="icon_solid" />
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#5BC0DE"
+          />
           <div class="state p-info">
             <i class="icon mdi mdi-check"></i>
             <label>Dubai</label>
@@ -126,7 +186,12 @@
         </div>
 
         <div class="pretty p-icon p-round">
-          <input type="radio" name="icon_solid" />
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#F0AD4E"
+          />
           <div class="state p-warning">
             <i class="icon mdi mdi-check"></i>
             <label>Tokyo</label>
@@ -134,7 +199,12 @@
         </div>
 
         <div class="pretty p-icon p-round">
-          <input type="radio" name="icon_solid" />
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#D8534E"
+          />
           <div class="state p-danger">
             <i class="icon mdi mdi-check"></i>
             <label>Istanbul</label>
@@ -147,41 +217,383 @@
           Deadline
         </p>
         <div class="pretty p-default p-round">
-          <input type="radio" name="radio1" />
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="today"
+          />
           <div class="state">
             <label>today</label>
           </div>
         </div>
         <div class="pretty p-default p-round">
-          <input type="radio" name="radio1" />
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="tomorrow"
+          />
           <div class="state">
             <label>tomorrow</label>
           </div>
         </div>
         <div class="pretty p-default p-round">
-          <input type="radio" name="radio1" />
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="soon"
+          />
           <div class="state">
             <label> soon </label>
           </div>
         </div>
         <div class="pretty p-default p-round">
-          <input type="radio" name="radio1" />
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="someday"
+          />
           <div class="state">
             <label> someday </label>
           </div>
         </div>
         <div class="pretty p-default p-round">
-          <input type="radio" name="radio1" />
+          <input
+            type="radio"
+            id="task-deadline-date-picker"
+            name="task-deadline"
+            value="specific day"
+          />
           <div class="state">
-            <label> specific day </label>
+            <label id="task-specific-day-text"> specific day </label>
           </div>
         </div>
       </div>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success">Save</button>
+      <button id="task-submit-btn" type="submit" class="button is-success">
+        Save
+      </button>
     </footer>
-  </div>
+  </form>
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<div class="modal" id="add-task-modal">
+  <div class="modal-background"></div>
+  <form id="add-task-form" class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title is-size-6">New Task</p>
+      {{/* <button class="delete" aria-label="close"></button> */}}
+    </header>
+    <section class="modal-card-body">
+      <div>
+        <label> Title </label>
+        <input
+          id="add-task-form-title"
+          class="input"
+          type="text"
+          placeholder="Text input"
+        />
+      </div>
+      <div class="mt-4 mb-2">
+        <p class="is-size-7">
+          <span class="material-icons is-size-7"> local_offer </span> Color tag
+        </p>
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#428ACA"
+          />
+          <div class="state p-primary">
+            <i class="icon mdi mdi-check"></i>
+            <label>New York</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#5CB85B"
+          />
+          <div class="state p-success">
+            <i class="icon mdi mdi-check"></i>
+            <label>Paris</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#5BC0DE"
+          />
+          <div class="state p-info">
+            <i class="icon mdi mdi-check"></i>
+            <label>Dubai</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#F0AD4E"
+          />
+          <div class="state p-warning">
+            <i class="icon mdi mdi-check"></i>
+            <label>Tokyo</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag"
+            value="#D8534E"
+          />
+          <div class="state p-danger">
+            <i class="icon mdi mdi-check"></i>
+            <label>Istanbul</label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <p class="is-size-7">
+          <span class="material-icons is-size-7"> calendar_today </span>
+          Deadline
+        </p>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="today"
+          />
+          <div class="state">
+            <label>today</label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="tomorrow"
+          />
+          <div class="state">
+            <label>tomorrow</label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="soon"
+          />
+          <div class="state">
+            <label> soon </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="someday"
+          />
+          <div class="state">
+            <label> someday </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline-date-picker"
+            name="task-deadline"
+            value="specific day"
+          />
+          <div class="state">
+            <label id="task-specific-day-text"> specific day </label>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button id="task-submit-btn" type="submit" class="button is-success">
+        Save
+      </button>
+    </footer>
+  </form>
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<div class="modal" id="edit-task-modal">
+  <div class="modal-background"></div>
+  <form id="edit-task-form" class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title is-size-6">Edit Task</p>
+      {{/* <button class="delete" aria-label="close"></button> */}}
+    </header>
+    <section class="modal-card-body">
+      <div>
+        <label> Title </label>
+        <input
+          id="edit-task-form-title"
+          class="input"
+          type="text"
+          placeholder="Text input"
+        />
+      </div>
+      <div class="mt-4 mb-2">
+        <p class="is-size-7">
+          <span class="material-icons is-size-7"> local_offer </span>
+          Color tag
+        </p>
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag-edit"
+            value="#428ACA"
+          />
+          <div class="state p-primary">
+            <i class="icon mdi mdi-check"></i>
+            <label>New York</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag-edit"
+            value="#5CB85B"
+          />
+          <div class="state p-success">
+            <i class="icon mdi mdi-check"></i>
+            <label>Paris</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag-edit"
+            value="#5BC0DE"
+          />
+          <div class="state p-info">
+            <i class="icon mdi mdi-check"></i>
+            <label>Dubai</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag-edit"
+            value="#F0AD4E"
+          />
+          <div class="state p-warning">
+            <i class="icon mdi mdi-check"></i>
+            <label>Tokyo</label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="task-color-tag"
+            name="task-color-tag-edit"
+            value="#D8534E"
+          />
+          <div class="state p-danger">
+            <i class="icon mdi mdi-check"></i>
+            <label>Istanbul</label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <p class="is-size-7">
+          <span class="material-icons is-size-7"> calendar_today </span>
+          Deadline
+        </p>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="today"
+          />
+          <div class="state">
+            <label>today</label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="tomorrow"
+          />
+          <div class="state">
+            <label>tomorrow</label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="soon"
+          />
+          <div class="state">
+            <label> soon </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline"
+            name="task-deadline"
+            value="someday"
+          />
+          <div class="state">
+            <label> someday </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="task-deadline-date-picker"
+            name="task-deadline"
+            value="specific day"
+          />
+          <div class="state">
+            <label id="task-specific-day-text"> specific day </label>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button id="task-submit-btn" type="submit" class="button is-success">
+        Save
+      </button>
+    </footer>
+  </form>
   <button class="modal-close is-large" aria-label="close"></button>
 </div>
 

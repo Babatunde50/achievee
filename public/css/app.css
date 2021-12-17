@@ -14,31 +14,34 @@
   cursor: pointer;
 }
 
-.sub-input {
-    background-color: #e91e61;
-    border-color: #e91e61;
-    color: white;
-    font-size: 1.25rem;
-    font-weight: 500;
+.completed {
+  text-decoration: line-through;
 }
 
-.sub-input:hover, .sub-input:focus, .sub-input:active {
-    border-color: #e91e61;
-    outline: none;
-    box-shadow: 3px -2px 11px -5px rgba(0,0,0,0.74);
+.sub-input {
+  background-color: #020404;
+  border-color: #020404;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.sub-input:hover,
+.sub-input:focus,
+.sub-input:active {
+  border-color: #020404;
+  outline: none;
+  box-shadow: 3px -2px 11px -5px rgba(0, 0, 0, 0.74);
 }
 
 .sub-input::placeholder {
-    color: white;
+  color: white;
 }
 
 #add-task {
-    cursor: pointer;
+  cursor: pointer;
 }
-
 
 #add-task:hover {
-    color: yellow;
+  color: yellow;
 }
-
-
