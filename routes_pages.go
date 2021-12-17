@@ -1,7 +1,9 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"todo-app/data"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -14,14 +16,17 @@ func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 // PLANNER -> authenticated index page
 func planner(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	_, err := r.Cookie("session_token")
+
+	ctx := r.Context()
+
+	// get tasks
+	tasks, err := data.GetTasksByUserId(ctx.Value(userIdKey).(int))
 
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
-		return
+		log.Fatal(err)
 	}
 
-	generateHTML(w, nil, "layout", "planner")
+	generateHTML(w, tasks, "layout", "planner")
 }
 
 // TODO:  GET -> Error page

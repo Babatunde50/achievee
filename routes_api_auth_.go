@@ -120,16 +120,15 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func refreshToken(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	sessionToken, userEmail, err := session(w, r)
 
-	if err != nil {
-		respond(w, message(false, err.Error()), http.StatusUnauthorized)
-		return
-	}
+	ctx := r.Context()
+
+	userEmail := ctx.Value(userEmailKey)
+	sessionToken := ctx.Value(sessionTokenKey)
 
 	newSessionToken := createUUID()
 
-	_, err = cache.Do("SETEX", newSessionToken, "300", userEmail)
+	_, err := cache.Do("SETEX", newSessionToken, "300", userEmail)
 
 	if err != nil {
 		respond(w, message(false, err.Error()), http.StatusInternalServerError)
@@ -152,15 +151,12 @@ func refreshToken(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	sessionToken, _, err := session(w, r)
+	ctx := r.Context()
 
-	if err != nil {
-		respond(w, message(false, err.Error()), http.StatusUnauthorized)
-		return
-	}
+	sessionToken := ctx.Value(sessionTokenKey)
 
 	// Delete the session from cache
-	_, err = cache.Do("DEL", sessionToken)
+	_, err := cache.Do("DEL", sessionToken)
 
 	if err != nil {
 		respond(w, message(false, err.Error()), http.StatusInternalServerError)

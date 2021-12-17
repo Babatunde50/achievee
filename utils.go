@@ -57,39 +57,3 @@ func respond(w http.ResponseWriter, data map[string]interface{}, statusCode int)
 	// http.SetCookie(w, &cookie)
 	json.NewEncoder(w).Encode(data)
 }
-
-func session(writer http.ResponseWriter, request *http.Request) (sessionToken string, userEmail string, err error) {
-	cookie, err := request.Cookie("session_token")
-
-	if err != nil {
-		if err == http.ErrNoCookie {
-			// If the cookie is not set, return an unauthorized status
-			respond(writer, message(false, err.Error()), http.StatusUnauthorized)
-			return
-		}
-		// For any other type of error, return a bad request status
-		respond(writer, message(false, err.Error()), http.StatusBadRequest)
-		return
-	}
-
-	sessionToken = cookie.Value
-
-	response, err := cache.Do("GET", sessionToken)
-
-	if err != nil {
-		// If there is an error fetching from cache, return an internal server error status
-		respond(writer, message(false, err.Error()), http.StatusInternalServerError)
-
-		return
-	}
-
-	userEmail = fmt.Sprintf("%s", response)
-
-	if response == nil {
-		// If the session token is not present in cache, return an unauthorized error
-		respond(writer, message(false, err.Error()), http.StatusUnauthorized)
-		return
-	}
-
-	return
-}

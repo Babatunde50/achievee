@@ -15,7 +15,7 @@ var Db *sql.DB
 func init() {
 	var err error
 
-	Db, err = sql.Open("postgres", "dbname=improvee_clone sslmode=disable")
+	Db, err = sql.Open("postgres", "dbname=achievee sslmode=disable")
 
 	if err != nil {
 		log.Fatal(err)
