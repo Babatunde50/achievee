@@ -1,3 +1,6 @@
+DROP TABLE if exists users cascade;
+DROP TABLE if exists tasks cascade;
+
 create table users (
     id serial primary key,
     uuid varchar(64) not null unique,
@@ -14,7 +17,7 @@ create table tasks (
     title varchar(255) not null,
     completed boolean,
     deadline timestamp,
-    colorTag varchar(64),
+    color_tag varchar(64),
     user_id integer references users(id),
     created_at timestamp not null,
     updated_at timestamp not null
