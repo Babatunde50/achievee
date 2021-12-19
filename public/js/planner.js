@@ -378,6 +378,24 @@ document
     }
   });
 
+document.querySelector('nav.side-nav').addEventListener('mouseenter', (e) => {
+  e.target.style.width = "250px"
+
+  Array.from(document.getElementsByClassName("nav-text")).forEach(elem => {
+    elem.classList.remove("is-hidden")
+  })
+
+});
+
+document.querySelector('nav.side-nav').addEventListener('mouseleave', (e) => {
+  e.target.style.width = "";
+
+  Array.from(document.getElementsByClassName("nav-text")).forEach(elem => {
+    elem.classList.add("is-hidden")
+  })
+
+});
+
 function getRadioByValue(v) {
   var inputs = editTaskModal.querySelectorAll('#task-color-tag');
   console.log(
