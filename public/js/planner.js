@@ -228,7 +228,7 @@ Array.from(document.getElementsByClassName('sub-input')).forEach((element) => {
 
       console.log(response.data, 'response.data!!!');
 
-      const subTasksElem = document.getElementById('sub-tasks');
+      const subTasksElem = document.getElementById(`sub-tasks-${taskId}`);
       const subTaskElem = document.createElement('div');
 
       subTaskElem.id = 'sub-task-';
@@ -270,35 +270,9 @@ Array.from(document.getElementsByClassName('sub-input')).forEach((element) => {
   });
 });
 
-// Array.from(taskCompleteInput).forEach((element) => {
-//   element.addEventListener('change', async function (e) {
-//     e.stopPropagation();
-//     try {
-//       await fetch(`/api/tasks/${e.target.id}/completed`, {
-//         method: 'PATCH',
-//         body: JSON.stringify({
-//           completed: e.target.checked,
-//         }),
-// headers: {
-//   'Content-Type': 'application/json',
-// },
-// withCredentials: true,
-//       });
-
-// const titleElem = document.getElementById(`task-${e.target.id}`);
-
-// titleElem.classList.toggle('completed');
-//     } catch (err) {
-//       console.log(err, err.response, 'this is the error');
-//     }
-//   });
-// });
-
 Array.from(document.getElementsByClassName('sub-task-complete')).forEach(
   (element) => {
     element.addEventListener('click', async (e) => {
-      console.log('I am being clicked!!!');
-
       const subTaskId = element.getAttribute('data-sub-task-id');
       const taskId = element.getAttribute('data-task-id');
 
