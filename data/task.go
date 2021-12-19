@@ -29,6 +29,23 @@ type SubTask struct {
 }
 
 // create a new task
+func (subTask *SubTask) Create() (err error) {
+	statement := "insert into subtasks(uuid, title, completed, task_id, created_at, updated_at) values ($1, $2, $3, $4, $5, $6)"
+
+	stmt, err := Db.Prepare(statement)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer stmt.Close()
+
+	stmt.QueryRow(createUUID(), subTask.Title, subTask.Completed, subTask.TaskId, time.Now(), time.Now()).Scan(&subTask.Id, &subTask.Uuid, &subTask.CreatedAt, &subTask.UpdatedAt)
+
+	return
+}
+
+// create a new task
 func (task *Task) Create() (err error) {
 	statement := "insert into tasks(uuid, title, completed, deadline, color_tag, user_id, created_at, updated_at) values ($1, $2, $3, $4, $5, $6, $7, $8)"
 
@@ -80,6 +97,20 @@ func UpdateTaskCompletion(completed Completed) (err error) {
 	return
 }
 
+func UpdateSubTaskCompletion(completed bool, subTaskId string, taskId string) (err error) {
+	statement := "update subtasks set completed = $3 where id = $1 AND task_id = $2"
+
+	stmt, err := Db.Prepare(statement)
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(subTaskId, taskId, completed)
+
+	return
+}
+
 type UpdateTaskData struct {
 	UserId   int
 	TaskId   int
@@ -123,23 +154,81 @@ func (task *Task) Delete() (err error) {
 	return
 }
 
+func DeleteSubTask(id string, taskId string) (err error) {
+	statement := "delete from subtasks WHERE id = $1 AND task_id = $2"
+
+	stmt, err := Db.Prepare(statement)
+
+	if err != nil {
+		return
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id, taskId)
+
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// SELECT * FROM albums JOIN artists ON albums.artist_id = artists.id;
+
+type TaskWithSubTasks struct {
+	Id        int
+	Uuid      string
+	Title     string
+	Completed bool
+	Deadline  time.Time
+	ColorTag  string
+	UserId    int
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	SubTasks  []SubTask
+}
+
 // get all tasks for a user
-func GetTasksByUserId(userId int) (tasks []Task, err error) {
+func GetTasksByUserId(userId int) (tasks []TaskWithSubTasks, err error) {
 	rows, err := Db.Query("SELECT * FROM tasks WHERE user_id = $1", userId)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(rows, "this is the rows from query")
-
 	defer rows.Close()
 
 	for rows.Next() {
-		var task Task
+		var task TaskWithSubTasks
 		if err = rows.Scan(&task.Id, &task.Uuid, &task.Title, &task.Completed, &task.Deadline, &task.ColorTag, &task.UserId, &task.CreatedAt, &task.UpdatedAt); err != nil {
 			return
 		}
+
+		rows, err := Db.Query("SELECT * FROM subtasks WHERE task_id = $1", task.Id)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer rows.Close()
+
+		var subTasks []SubTask
+
+		for rows.Next() {
+			var subTask SubTask
+
+			rows.Scan(&subTask.Id, &subTask.Uuid, &subTask.Title, &subTask.Completed, &subTask.TaskId, &subTask.CreatedAt, &subTask.UpdatedAt)
+
+			// err != nil {
+			// 	// return
+			// }
+
+			subTasks = append(subTasks, subTask)
+		}
+
+		task.SubTasks = subTasks
+
 		tasks = append(tasks, task)
 	}
 

@@ -29,6 +29,36 @@ func userTasks(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 }
 
+func updateCompleteSubTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	complete := struct {
+		Completed bool `json:"completed"`
+	}{}
+
+	err := json.NewDecoder(r.Body).Decode(&complete)
+
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusBadRequest)
+		return
+	}
+
+	taskId := ps.ByName("taskId")
+	id := ps.ByName("id")
+
+	err = data.UpdateSubTaskCompletion(complete.Completed, id, taskId)
+
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	resp := message(true, "Successful")
+	resp["data"] = complete
+
+	respond(w, resp, http.StatusOK)
+
+}
+
 func updateCompleteTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx := r.Context()
 
@@ -137,6 +167,57 @@ func deleteTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	resp := message(true, "Successful")
 
 	respond(w, resp, http.StatusOK)
+}
+
+func deleteSubTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	taskId := ps.ByName("taskId")
+	id := ps.ByName("id")
+
+	err := data.DeleteSubTask(id, taskId)
+
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	resp := message(true, "Successful")
+
+	respond(w, resp, http.StatusOK)
+}
+
+func createSubTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	subTask := data.SubTask{}
+
+	err := json.NewDecoder(r.Body).Decode(&subTask)
+
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusBadRequest)
+		return
+	}
+
+	taskIdParam := ps.ByName("taskId")
+
+	taskId, err := strconv.Atoi(taskIdParam)
+
+	if err != nil {
+		respond(w, message(false, err.Error()), http.StatusUnauthorized)
+		return
+	}
+
+	subTask.TaskId = taskId
+
+	// create a subTask
+	err = subTask.Create()
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	resp := message(true, "Successful")
+	resp["data"] = subTask
+
+	respond(w, resp, http.StatusCreated)
 }
 
 func createTask(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

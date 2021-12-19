@@ -148,6 +148,9 @@ func main() {
 	router.DELETE("/api/tasks/:id", apiAuthMiddleware(deleteTask))
 	router.PATCH("/api/tasks/:id/edits", apiAuthMiddleware(updateTask))
 	router.PATCH("/api/tasks/:id/completed", apiAuthMiddleware(updateCompleteTask))
+	router.POST("/api/subtask/:taskId", apiAuthMiddleware(createSubTask))
+	router.PATCH("/api/subtask/:id/:taskId", apiAuthMiddleware(updateCompleteSubTask))
+	router.DELETE("/api/subtask/:id/:taskId", apiAuthMiddleware(deleteSubTask))
 
 	http.ListenAndServe(":8081", cors.Default().Handler(router))
 }

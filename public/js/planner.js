@@ -128,8 +128,8 @@ Array.from(taskContainer).forEach((element) => {
 
 const taskCompleteInput = document.getElementsByClassName('task-complete');
 
-Array.from(taskContainer).forEach((element) => {
-  element.addEventListener('click', async function (e) {
+Array.from(taskCompleteInput).forEach((element) => {
+  element.addEventListener('change', async function (e) {
     e.stopPropagation();
     try {
       await fetch(`/api/tasks/${e.target.id}/completed`, {
@@ -175,6 +175,157 @@ Array.from(taskEditIcon).forEach((element) => {
   });
 });
 
+Array.from(document.getElementsByClassName('sub-task-delete')).forEach(
+  (element) => {
+    element.addEventListener('click', async (e) => {
+      e.stopPropagation();
+
+      const taskId = element.getAttribute('data-task-id');
+      const subTaskId = element.getAttribute('data-sub-task-id');
+
+      await fetch(`/api/subtask/${subTaskId}/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      const deletedElement = document.getElementById(`sub-task-${subTaskId}`);
+
+      console.log(deletedElement, 'this is the deleted element!!!');
+
+      if (deletedElement.parentNode) {
+        deletedElement.parentNode.removeChild(deletedElement);
+      }
+    });
+  }
+);
+
+Array.from(document.getElementsByClassName('sub-input')).forEach((element) => {
+  element.addEventListener('keypress', async (e) => {
+    if (e.keyCode == 13) {
+      const taskId = e.target.getAttribute('data-task-id');
+
+      if (!e.target.value) return;
+
+      // send post request...
+      const res = await fetch(`/api/subtask/${taskId}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          completed: false,
+          title: e.target.value,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      const response = await res.json();
+
+      // TODO: get the right id in the response and attach to created subtask element
+
+      console.log(response.data, 'response.data!!!');
+
+      const subTasksElem = document.getElementById('sub-tasks');
+      const subTaskElem = document.createElement('div');
+
+      subTaskElem.id = 'sub-task-';
+
+      subTaskElem.innerHTML = `
+      
+
+                    <div
+                class="
+                  is-flex is-justify-content-space-between is-align-items-center 
+                  my-2
+                "
+                style="width: 50%;"
+              >
+                <div class="pretty p-svg p-curve">
+                  <input type="checkbox" />
+                  <div class="state p-primary">
+                    <!-- svg path -->
+                    <svg class="svg svg-icon" viewBox="0 0 20 20">
+                      <path
+                        d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                        style="stroke: white; fill: white"
+                      ></path>
+                    </svg>
+                    <label> ${e.target.value} </label>
+                  </div>
+                </div>
+                <span class="material-icons is-size-6"> delete </span>
+              </div>
+      
+      `;
+
+      subTasksElem.append(subTaskElem);
+
+      e.target.value = '';
+    } else {
+      return false;
+    }
+  });
+});
+
+// Array.from(taskCompleteInput).forEach((element) => {
+//   element.addEventListener('change', async function (e) {
+//     e.stopPropagation();
+//     try {
+//       await fetch(`/api/tasks/${e.target.id}/completed`, {
+//         method: 'PATCH',
+//         body: JSON.stringify({
+//           completed: e.target.checked,
+//         }),
+// headers: {
+//   'Content-Type': 'application/json',
+// },
+// withCredentials: true,
+//       });
+
+// const titleElem = document.getElementById(`task-${e.target.id}`);
+
+// titleElem.classList.toggle('completed');
+//     } catch (err) {
+//       console.log(err, err.response, 'this is the error');
+//     }
+//   });
+// });
+
+Array.from(document.getElementsByClassName('sub-task-complete')).forEach(
+  (element) => {
+    element.addEventListener('click', async (e) => {
+      console.log('I am being clicked!!!');
+
+      const subTaskId = element.getAttribute('data-sub-task-id');
+      const taskId = element.getAttribute('data-task-id');
+
+      await fetch(`/api/subtask/${subTaskId}/${taskId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          completed: e.target.checked,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      const titleElem = document.getElementById(`sub-task-title-${subTaskId}`);
+
+      console.log(titleElem, 'title element');
+
+      titleElem.classList.toggle('completed');
+
+      console.log('---after---');
+
+      console.log(document.getElementById(`sub-task-${subTaskId}`));
+    });
+  }
+);
+
 Array.from(document.getElementsByClassName('task-delete')).forEach(
   (element) => {
     element.addEventListener('click', async (e) => {
@@ -182,15 +333,34 @@ Array.from(document.getElementsByClassName('task-delete')).forEach(
 
       const taskId = element.getAttribute('data-task-id');
 
-      try {
-        await fetch(`/api/tasks/${taskId}`, {
-          method: 'DELETE',
-        });
-
-        window.location.reload();
-      } catch (err) {
-        console.log(err.response);
-      }
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await fetch(`/api/tasks/${taskId}`, {
+              method: 'DELETE',
+            });
+            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } catch (err) {
+            console.log(err.response);
+          }
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          Swal.fire('Cancelled', 'You cancelled', 'error');
+        }
+      });
     });
   }
 );
