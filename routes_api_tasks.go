@@ -166,7 +166,7 @@ func deleteTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	resp := message(true, "Successful")
 
-	respond(w, resp, http.StatusOK)
+	respond(w, resp, http.StatusNoContent)
 }
 
 func deleteSubTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
