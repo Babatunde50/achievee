@@ -154,6 +154,10 @@ func main() {
 
 	// GOALS
 	router.POST("/api/goals", apiAuthMiddleware(createGoal))
+	router.GET("/api/goals", apiAuthMiddleware(userGoals))
+	router.DELETE("/api/goals/:id", apiAuthMiddleware(deleteGoal))
+	router.PATCH("/api/goals/:id/edits", apiAuthMiddleware(updateGoal))
+	router.PATCH("/api/goals/:id/progress", apiAuthMiddleware(updateGoalProgress))
 
 	http.ListenAndServe(":8081", cors.Default().Handler(router))
 }
