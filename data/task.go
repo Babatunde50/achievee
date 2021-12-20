@@ -147,10 +147,6 @@ func (task *Task) Delete() (err error) {
 
 	_, err = stmt.Exec(task.Id, task.UserId)
 
-	if err != nil {
-		return
-	}
-
 	return
 }
 
