@@ -20,6 +20,7 @@ func createGoal(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	goal := data.Goal{
 		TotalPercentCompleted: 0,
+		TotalPercent:          100,
 		Completed:             false,
 		Paused:                false,
 		UserId:                ctx.Value(userIdKey).(int),

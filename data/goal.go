@@ -23,8 +23,9 @@ type Goal struct {
 // create goal
 func (goal *Goal) Create() (err error) {
 	statement := `
-		INSERT INTO goals (uuid, title, color_tag, total_percent, total_percent_completed, completed, paused, deadline, user_id, created_at, updated_at)
-		VALUES($1, $2, $3, $4, $5, $5, $6, $7, $8, $9, $10, $11)
+		INSERT INTO goals 
+		(uuid, title, color_tag, total_percent, total_percent_completed, completed, paused, deadline, user_id, created_at, updated_at)
+		VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 		RETURNING id, uuid, created_at, updated_at
 	`
 
@@ -108,7 +109,7 @@ func UpdateGoalProgress(updateGoalPercentCompleted UpdateGoalPercentCompletedDat
 
 // get all goals for a user
 func GetGoalsByUserId(userId int) (goals []Goal, err error) {
-	rows, err := Db.Query("SELECT * FROM tasks WHERE user_id = $1", userId)
+	rows, err := Db.Query("SELECT * FROM goals WHERE user_id = $1", userId)
 
 	if err != nil {
 		log.Fatal(err)
