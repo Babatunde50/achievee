@@ -2,29 +2,47 @@
 
 <div class="container" style="background: #fcfdfc">
   <nav class="side-nav">
-
-    <div class="nav-is-active is-flex is-align-content-center is-justify-content-space-between py-2"> 
-      <span class="material-icons is-size-2 "> view_column </span>
-      <p class="nav-text is-hidden is-size-5 has-text-weight-semibold px-2 "> Action Board  </p>
+    <div
+      class="
+        nav-is-active
+        is-flex is-align-content-center is-justify-content-space-between
+        py-2
+      "
+    >
+      <span class="material-icons is-size-2"> view_column </span>
+      <p class="nav-text is-hidden is-size-5 has-text-weight-semibold px-2">
+        Action Board
+      </p>
     </div>
 
-    <div class="is-flex is-align-content-center is-justify-content-space-between py-2"> 
+    <div
+      class="
+        is-flex is-align-content-center is-justify-content-space-between
+        py-2
+      "
+    >
       <span class="material-icons is-size-2"> analytics </span>
-      <p class="nav-text is-hidden is-size-5 has-text-weight-semibold px-2"> My Journey  </p>
+      <p class="nav-text is-hidden is-size-5 has-text-weight-semibold px-2">
+        My Journey
+      </p>
     </div>
-    
-    <div class="is-flex is-align-content-center is-justify-content-space-between py-2"> 
-       <span class="material-icons is-size-2"> text_snippet </span>
-       <p class="nav-text is-hidden is-size-5 has-text-weight-semibold px-2"> My Notes  </p>
-    </div>
-    
 
-   
+    <div
+      class="
+        is-flex is-align-content-center is-justify-content-space-between
+        py-2
+      "
+    >
+      <span class="material-icons is-size-2"> text_snippet </span>
+      <p class="nav-text is-hidden is-size-5 has-text-weight-semibold px-2">
+        My Notes
+      </p>
+    </div>
   </nav>
 
   <div class="is-flex is-justify-content-space-between is-align-content-center">
     <span class="material-icons is-hidden-tablet"> menu </span>
-    <div> </div>
+    <div></div>
     <div class="is-flex is-align-content-center">
       <p class="is-size-6 has-text-weight-semibold px-2 mt-2">
         Babatunde Ololade
@@ -49,7 +67,7 @@
       </nav>
 
       <div>
-        {{ range . }}
+        {{ range .Tasks }}
 
         <div class="task-container" style="background-color: {{ .ColorTag }}">
           <div
@@ -207,6 +225,60 @@
           </div>
         </div>
       </nav>
+
+      <div>
+        {{ range .Goals }}
+
+        <div class="task-container" style="background-color: {{ .ColorTag }}">
+          <div
+            class="
+              is-flex is-justify-content-space-between is-align-items-center
+            "
+            style="width: 100%"
+          >
+            <div style="width:85%;">
+              <p
+                class="has-text-weight-semibold is-size-6 {{if .Completed }}completed{{end}}"
+                id="goal-{{.Id}}"
+              >
+                {{ .Title }}
+              </p>
+              <p class="is-size-7 py-2">
+                <span class="material-icons is-size-7"> calendar_today </span>
+                {{/* 08 nov (34 days ago) */}} {{ .Deadline }}
+              </p>
+              <div>
+                <progress class="progress is-small" value="15" max="100">15%</progress>
+              </div>
+            </div>
+            <div>
+              {{/*
+              <span class="material-icons is-size-6"> more_vert </span> */}}
+              <span
+                data-task-id="{{.Id}}"
+                class="material-icons is-size-6 goal-delete"
+              >
+                delete
+              </span>
+              <span
+                data-task-id="{{.Id}}"
+                data-task-deadline="{{.Deadline}}"
+                data-task-title="{{.Title}}"
+                data-task-color-tag="{{.ColorTag}}"
+                class="material-icons is-size-6 goal-edit"
+              >
+                arrow_forward_ios
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {{ else }}
+
+        <p>Nothing to show!!!</p>
+
+        {{ end }}
+      </div>
     </div>
   </div>
 </div>
