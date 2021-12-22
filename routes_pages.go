@@ -27,7 +27,24 @@ func planner(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		log.Fatal(err)
 	}
 
-	generateHTML(w, tasks, "layout", "planner")
+	goals, err := data.GetGoalsByUserId(ctx.Value(userIdKey).(int))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// d["tasks"] = tasks
+	// d["goals"] = goals
+
+	d := struct {
+		Tasks []data.TaskWithSubTasks
+		Goals []data.Goal
+	}{
+		Tasks: tasks,
+		Goals: goals,
+	}
+
+	generateHTML(w, d, "layout", "planner")
 }
 
 // TODO:  GET -> Error page
