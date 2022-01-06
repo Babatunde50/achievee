@@ -1,3 +1,7 @@
+CREATE USER docker;
+CREATE DATABASE docker;
+GRANT ALL PRIVILEGES ON DATABASE docker TO docker;
+
 DROP TABLE if exists users cascade;
 DROP TABLE if exists tasks cascade;
 

@@ -163,7 +163,7 @@ func main() {
 }
 
 func initCache() {
-	conn, err := redis.DialURL("redis://localhost")
+	conn, err := redis.DialURL("redis://redis")
 	if err != nil {
 		panic(err)
 	}

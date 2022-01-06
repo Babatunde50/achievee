@@ -45,13 +45,13 @@
     <div></div>
     <div class="is-flex is-align-content-center">
       <p class="is-size-6 has-text-weight-semibold px-2 mt-2">
-        Babatunde Ololade
+        {{ .User.FirstName }} {{ .User.LastName }}
       </p>
-      <div class="user-avatar">B</div>
+      <div class="user-avatar"> B </div>
     </div>
   </div>
 
-  <div class="columns">
+  <div class="columns container">
     <div class="column">
       <h3 class="title mb-0">
         tasks <span class="material-icons" id="add-task"> add </span>
@@ -202,20 +202,7 @@
     </div>
     <div class="column">
       <h3 class="title mb-0">
-        routines <span class="material-icons"> add </span>
-      </h3>
-      <nav class="navbar" role="navigation">
-        <div class="navbar-menu">
-          <div class="navbar-start">
-            <a class="navbar-item"> today </a>
-            <a class="navbar-item"> all </a>
-          </div>
-        </div>
-      </nav>
-    </div>
-    <div class="column">
-      <h3 class="title mb-0">
-        goals <span class="material-icons"> add </span>
+        goals <span id="add-goal" class="material-icons"> add </span>
       </h3>
       <nav class="navbar" role="navigation">
         <div class="navbar-menu">
@@ -236,7 +223,7 @@
             "
             style="width: 100%"
           >
-            <div style="width:85%;">
+            <div style="width: 85%">
               <p
                 class="has-text-weight-semibold is-size-6 {{if .Completed }}completed{{end}}"
                 id="goal-{{.Id}}"
@@ -248,7 +235,9 @@
                 {{/* 08 nov (34 days ago) */}} {{ .Deadline }}
               </p>
               <div>
-                <progress class="progress is-small" value="15" max="100">15%</progress>
+                <progress class="progress is-small" value="15" max="100">
+                  15%
+                </progress>
               </div>
             </div>
             <div>
@@ -283,21 +272,20 @@
   </div>
 </div>
 
-<div class="modal" id="add-task-modal">
+<div class="modal" id="add-goal-modal">
   <div class="modal-background"></div>
-  <form id="add-task-form" class="modal-card">
+  <form id="add-goal-form" class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title is-size-6">New Task</p>
-      {{/* <button class="delete" aria-label="close"></button> */}}
+      <p class="modal-card-title is-size-6">New Goal</p>
     </header>
     <section class="modal-card-body">
       <div>
-        <label> Title </label>
+        <label> Goal Title </label>
         <input
-          id="add-task-form-title"
+          id="add-goal-form-title"
           class="input"
           type="text"
-          placeholder="Text input"
+          placeholder="Goal Title"
         />
       </div>
       <div class="mt-4 mb-2">
@@ -307,65 +295,88 @@
         <div class="pretty p-icon p-round">
           <input
             type="radio"
-            id="task-color-tag"
-            name="task-color-tag"
+            id="goal-color-tag"
+            name="goal-color-tag"
             value="#428ACA"
           />
           <div class="state p-primary">
             <i class="icon mdi mdi-check"></i>
-            <label>New York</label>
+            <label></label>
           </div>
         </div>
 
         <div class="pretty p-icon p-round">
           <input
             type="radio"
-            id="task-color-tag"
-            name="task-color-tag"
+            id="goal-color-tag"
+            name="goal-color-tag"
             value="#5CB85B"
           />
           <div class="state p-success">
             <i class="icon mdi mdi-check"></i>
-            <label>Paris</label>
+            <label></label>
           </div>
         </div>
 
         <div class="pretty p-icon p-round">
           <input
             type="radio"
-            id="task-color-tag"
-            name="task-color-tag"
+            id="goal-color-tag"
+            name="goal-color-tag"
             value="#5BC0DE"
           />
           <div class="state p-info">
             <i class="icon mdi mdi-check"></i>
-            <label>Dubai</label>
+            <label></label>
           </div>
         </div>
 
         <div class="pretty p-icon p-round">
           <input
             type="radio"
-            id="task-color-tag"
-            name="task-color-tag"
+            id="goal-color-tag"
+            name="goal-color-tag"
             value="#F0AD4E"
           />
           <div class="state p-warning">
             <i class="icon mdi mdi-check"></i>
-            <label>Tokyo</label>
+            <label></label>
           </div>
         </div>
 
         <div class="pretty p-icon p-round">
           <input
             type="radio"
-            id="task-color-tag"
-            name="task-color-tag"
+            id="goal-color-tag"
+            name="goal-color-tag"
             value="#D8534E"
           />
           <div class="state p-danger">
             <i class="icon mdi mdi-check"></i>
-            <label>Istanbul</label>
+            <label></label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 mb-2">
+        <p class="is-size-7">
+          <span class="material-icons"> track_changes </span>
+          Target
+        </p>
+        <div class="pretty p-default p-round">
+          <input type="radio" id="goal-target" name="goal-target" value="100" />
+          <div class="state">
+            <label>100%</label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="goal-target"
+            name="goal-target"
+            value="custom"
+          />
+          <div class="state">
+            <label> custom value </label>
           </div>
         </div>
       </div>
@@ -377,41 +388,30 @@
         <div class="pretty p-default p-round">
           <input
             type="radio"
-            id="task-deadline"
-            name="task-deadline"
-            value="today"
+            id="goal-deadline"
+            name="goal-deadline"
+            value="this month"
           />
           <div class="state">
-            <label>today</label>
+            <label> this month </label>
           </div>
         </div>
         <div class="pretty p-default p-round">
           <input
             type="radio"
-            id="task-deadline"
-            name="task-deadline"
-            value="tomorrow"
+            id="goal-deadline"
+            name="goal-deadline"
+            value="next month"
           />
           <div class="state">
-            <label>tomorrow</label>
+            <label> next month </label>
           </div>
         </div>
         <div class="pretty p-default p-round">
           <input
             type="radio"
-            id="task-deadline"
-            name="task-deadline"
-            value="soon"
-          />
-          <div class="state">
-            <label> soon </label>
-          </div>
-        </div>
-        <div class="pretty p-default p-round">
-          <input
-            type="radio"
-            id="task-deadline"
-            name="task-deadline"
+            id="goal-deadline"
+            name="goal-deadline"
             value="someday"
           />
           <div class="state">
@@ -421,18 +421,186 @@
         <div class="pretty p-default p-round">
           <input
             type="radio"
-            id="task-deadline-date-picker"
-            name="task-deadline"
+            id="goal-deadline-date-picker"
+            name="goal-deadline"
             value="specific day"
           />
           <div class="state">
-            <label id="task-specific-day-text"> specific day </label>
+            <label id="goal-specific-day-text"> specific day </label>
           </div>
         </div>
       </div>
     </section>
     <footer class="modal-card-foot">
-      <button id="task-submit-btn" type="submit" class="button is-success">
+      <button id="goal-submit-btn" type="submit" class="button is-success">
+        Save
+      </button>
+    </footer>
+  </form>
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<div class="modal" id="edit-goal-modal">
+  <div class="modal-background"></div>
+  <form id="edit-goal-form" class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title is-size-6">Edit Goal</p>
+    </header>
+    <section class="modal-card-body">
+      <div>
+        <label> Goal Title </label>
+        <input
+          id="edit-goal-form-title"
+          class="input"
+          type="text"
+          placeholder="Goal Title"
+        />
+      </div>
+      <div class="mt-4 mb-2">
+        <p class="is-size-7">
+          <span class="material-icons is-size-7"> local_offer </span> Color tag
+        </p>
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="goal-color-tag"
+            name="goal-color-tag-edit"
+            value="#428ACA"
+          />
+          <div class="state p-primary">
+            <i class="icon mdi mdi-check"></i>
+            <label></label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="goal-color-tag"
+            name="goal-color-tag-edit"
+            value="#5CB85B"
+          />
+          <div class="state p-success">
+            <i class="icon mdi mdi-check"></i>
+            <label></label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="goal-color-tag"
+            name="goal-color-tag-edit"
+            value="#5BC0DE"
+          />
+          <div class="state p-info">
+            <i class="icon mdi mdi-check"></i>
+            <label></label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="goal-color-tag"
+            name="goal-color-tag-edit"
+            value="#F0AD4E"
+          />
+          <div class="state p-warning">
+            <i class="icon mdi mdi-check"></i>
+            <label></label>
+          </div>
+        </div>
+
+        <div class="pretty p-icon p-round">
+          <input
+            type="radio"
+            id="goal-color-tag"
+            name="goal-color-tag-edit"
+            value="#D8534E"
+          />
+          <div class="state p-danger">
+            <i class="icon mdi mdi-check"></i>
+            <label></label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 mb-2">
+        <p class="is-size-7">
+          <span class="material-icons"> track_changes </span>
+          Target
+        </p>
+        <div class="pretty p-default p-round">
+          <input type="radio" id="goal-target" name="goal-target" value="100" />
+          <div class="state">
+            <label>100%</label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="goal-target"
+            name="goal-target"
+            value="custom"
+          />
+          <div class="state">
+            <label> custom value </label>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <p class="is-size-7">
+          <span class="material-icons is-size-7"> calendar_today </span>
+          Deadline
+        </p>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="goal-deadline"
+            name="goal-deadline"
+            value="this month"
+          />
+          <div class="state">
+            <label> this month </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="goal-deadline"
+            name="goal-deadline"
+            value="next month"
+          />
+          <div class="state">
+            <label> next month </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="goal-deadline"
+            name="goal-deadline"
+            value="someday"
+          />
+          <div class="state">
+            <label> someday </label>
+          </div>
+        </div>
+        <div class="pretty p-default p-round">
+          <input
+            type="radio"
+            id="goal-deadline-date-picker"
+            name="goal-deadline"
+            value="specific day"
+          />
+          <div class="state">
+            <label id="goal-specific-day-text"> specific day </label>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button id="goal-submit-btn" type="submit" class="button is-success">
         Save
       </button>
     </footer>
@@ -602,7 +770,6 @@
   <form id="edit-task-form" class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title is-size-6">Edit Task</p>
-      {{/* <button class="delete" aria-label="close"></button> */}}
     </header>
     <section class="modal-card-body">
       <div>
@@ -611,7 +778,7 @@
           id="edit-task-form-title"
           class="input"
           type="text"
-          placeholder="Text input"
+          placeholder="Task title"
         />
       </div>
       <div class="mt-4 mb-2">

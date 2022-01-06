@@ -38,12 +38,13 @@
   color: white;
 }
 
-#add-task {
+#add-task, #add-goal {
   cursor: pointer;
 }
 
 #add-task:hover {
-  color: yellow;
+  font-weight: bold;
+  color: #020404;
 }
 
 .user-avatar {

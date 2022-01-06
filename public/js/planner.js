@@ -1,9 +1,14 @@
 const addTaskBtn = document.getElementById('add-task');
+const addGoalBtn = document.getElementById('add-goal');
 const addTaskModal = document.getElementById('add-task-modal');
+const addGoalModal = document.getElementById('add-goal-modal');
 const editTaskModal = document.getElementById('edit-task-modal');
+const editGoalModal = document.getElementById('edit-goal-modal');
 const taskDeadlineDatePickerInput = document.querySelector(
   '#task-deadline-date-picker'
 );
+
+// all about goals...
 
 const datePicker = MCDatepicker.create({
   el: '#task-deadline-date-picker',
@@ -34,15 +39,101 @@ addTaskBtn.addEventListener('click', () => {
   addTaskModal.classList.add('is-active');
 });
 
+addGoalBtn.addEventListener('click', () => {
+  addGoalModal.classList.add('is-active');
+});
+
 Array.from(modalCloseIcons).forEach((element) => {
   element.addEventListener('click', () => {
     addTaskModal.classList.remove('is-active');
     editTaskModal.classList.remove('is-active');
+    addGoalModal.classList.remove('is-active');
   });
 });
 
-// adding task
+// adding goal
+document
+  .getElementById('add-goal-form')
+  .addEventListener('submit', async (e) => {
+    e.preventDefault();
 
+    const title = document.getElementById('add-goal-form-title').value;
+    const colorTag = document.querySelector(
+      'input[name="goal-color-tag"]:checked'
+    ).value;
+    const goalTarget = document.querySelector(
+      'input[name="goal-target"]:checked'
+    ).value;
+    const taskDeadline = document.querySelector(
+      'input[name="goal-deadline"]:checked'
+    ).value;
+
+    try {
+      await fetch('/api/goals', {
+        method: 'POST',
+        body: JSON.stringify({
+          title,
+          colorTag,
+          deadline: new Date(),
+          totalPercent: Number(goalTarget),
+        }),
+      });
+      window.location.reload();
+    } catch (err) {
+      console.log(err.response);
+    }
+  });
+
+  // edit goal 
+
+
+document
+.getElementById('edit-goal-form')
+.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const title = document.getElementById('edit-goal-form-title').value;
+  const colorTag = document.querySelector(
+    'input[name="goal-color-tag-edit"]:checked'
+  ).value;
+  const goalTarget = document.querySelector(
+    'input[name="goal-target"]:checked'
+  ).value;
+  const taskDeadline = document.querySelector(
+    'input[name="goal-deadline"]:checked'
+  ).value;
+  
+
+  const taskId = editTaskModal.getAttribute('data-task-id');
+  // const taskDeadline = document.querySelector(
+  //   'input[name="task-deadline"]:checked'
+  // ).value;
+
+  try {
+    await fetch(`/api/tasks/${taskId}/edits`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        title,
+        colorTag,
+        // deadline:
+        //   taskDeadline.length > 8
+        //     ? new Date(taskDeadline).toLocaleDateString('en-US', {
+        //         year: 'numeric',
+        //         month: '2-digit',
+        //         day: '2-digit',
+        //       })
+        //     : getDate(taskDeadline),
+        deadline: new Date(),
+      }),
+    });
+
+    window.location.reload();
+  } catch (err) {
+    console.log(err.response);
+  }
+});
+
+// adding task
 document
   .getElementById('add-task-form')
   .addEventListener('submit', async (e) => {
@@ -151,6 +242,10 @@ Array.from(taskCompleteInput).forEach((element) => {
     }
   });
 });
+
+// open edit modal
+
+
 
 const taskEditIcon = document.getElementsByClassName('task-edit');
 
@@ -379,21 +474,19 @@ document
   });
 
 document.querySelector('nav.side-nav').addEventListener('mouseenter', (e) => {
-  e.target.style.width = "250px"
+  e.target.style.width = '250px';
 
-  Array.from(document.getElementsByClassName("nav-text")).forEach(elem => {
-    elem.classList.remove("is-hidden")
-  })
-
+  Array.from(document.getElementsByClassName('nav-text')).forEach((elem) => {
+    elem.classList.remove('is-hidden');
+  });
 });
 
 document.querySelector('nav.side-nav').addEventListener('mouseleave', (e) => {
-  e.target.style.width = "";
+  e.target.style.width = '';
 
-  Array.from(document.getElementsByClassName("nav-text")).forEach(elem => {
-    elem.classList.add("is-hidden")
-  })
-
+  Array.from(document.getElementsByClassName('nav-text')).forEach((elem) => {
+    elem.classList.add('is-hidden');
+  });
 });
 
 function getRadioByValue(v) {

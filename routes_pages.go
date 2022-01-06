@@ -2,6 +2,7 @@ package main
 
 import (
 	// "fmt"
+	"fmt"
 	"log"
 	"net/http"
 	"todo-app/data"
@@ -33,15 +34,22 @@ func planner(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		log.Fatal(err)
 	}
 
-	// d["tasks"] = tasks
-	// d["goals"] = goals
+	user, err := data.UserByEmail(ctx.Value(userEmailKey).(string))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(user, "user..")
 
 	d := struct {
 		Tasks []data.TaskWithSubTasks
 		Goals []data.Goal
+		User  data.User
 	}{
 		Tasks: tasks,
 		Goals: goals,
+		User:  user,
 	}
 
 	generateHTML(w, d, "layout", "planner")

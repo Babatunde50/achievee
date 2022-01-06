@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  postgres:
+    image: 'postgres'
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: db
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+  app:
+    build: .
+    ports:
+      - '8081:8081'
+    depends_on:
+      - postgres
+      - redis
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - redisdata:/data
+
+volumes:
+  dbdata: null
+  redisdata: null
