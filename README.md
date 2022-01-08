@@ -1,3 +1,3 @@
-### Achievee
+# Achievee
 
-vist at http://achievee.herokuapp.com/
+https://achievee.herokuapp.com/
