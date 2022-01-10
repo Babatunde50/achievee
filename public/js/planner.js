@@ -504,3 +504,22 @@ function getRadioByValue(v) {
   }
   return false;
 }
+
+
+const logout = async () => {
+  try {
+    const res = await fetch('/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true
+    });
+    const response = await res.json();
+    console.log(response, 'RESPONSE!!!');
+
+    window.location.assign("/")
+  } catch (err) {
+    // showErrorMessage(err.response.data.message);
+  }
+};

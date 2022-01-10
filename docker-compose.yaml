@@ -1,18 +1,18 @@
 version: '3.9'
 services:
   postgres:
-    image: 'postgres'
+    image: postgres:11.3
     restart: always
     ports:
       - '5432:5432'
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
-      POSTGRES_DB: db
+    container_name: postgresdb
     volumes:
       - dbdata:/var/lib/postgresql/data
-      - ./sql:/docker-entrypoint-initdb.d
-  app:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  web:
     build: .
     ports:
       - '8081:8081'

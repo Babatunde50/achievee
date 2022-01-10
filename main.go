@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"todo-app/data"
 
 	"github.com/gomodule/redigo/redis"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 )
@@ -159,14 +161,17 @@ func main() {
 	router.PATCH("/api/goals/:id/edits", apiAuthMiddleware(updateGoal))
 	router.PATCH("/api/goals/:id/progress", apiAuthMiddleware(updateGoalProgress))
 
-	http.ListenAndServe(":8081", cors.Default().Handler(router))
+	port := os.Getenv("PORT")
+
+	http.ListenAndServe(":"+port, cors.Default().Handler(router))
 }
 
 func initCache() {
-	conn, err := redis.DialURL("redis://redis")
+	conn, err := redis.DialURL(os.Getenv("REDISCLOUD_URL"))
 	if err != nil {
 		panic(err)
 	}
+
 	// Assign the connection to the package level `cache` variable
 	cache = conn
 }

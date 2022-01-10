@@ -57,6 +57,24 @@ const signUp = async (firstName, lastName, email, password) => {
   }
 };
 
+const logout = async () => {
+  try {
+    const res = await fetch('/api/logoout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true
+    });
+    const response = await res.json();
+    console.log(response, 'RESPONSE!!!');
+
+    window.location.assign("/")
+  } catch (err) {
+    // showErrorMessage(err.response.data.message);
+  }
+};
+
 const login = async (email, password) => {
   try {
     const res = await fetch('/api/login', {

@@ -3,13 +3,11 @@ package main
 import (
 	"crypto/rand"
 	"encoding/json"
-	"log"
-
-	// "errors"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
-	// "todo-app/data"
+	"os"
 )
 
 func generateHTML(writer http.ResponseWriter, data interface{}, filenames ...string) {
@@ -47,13 +45,14 @@ func createUUID() (uuid string) {
 func respond(w http.ResponseWriter, data map[string]interface{}, statusCode int) {
 	w.Header().Add("Content-Type", "application/json")
 
-	// cookie := http.Cookie{
-	// 	Name:     "_test_cookie",
-	// 	Value:    "123123",
-	// 	HttpOnly: true,
-	// }
-
 	w.WriteHeader(statusCode)
-	// http.SetCookie(w, &cookie)
 	json.NewEncoder(w).Encode(data)
+}
+
+func GetEnvDefault(key, defVal string) string {
+	val, ex := os.LookupEnv(key)
+	if !ex {
+		return defVal
+	}
+	return val
 }

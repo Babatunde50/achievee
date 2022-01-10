@@ -2,9 +2,6 @@ CREATE USER docker;
 CREATE DATABASE docker;
 GRANT ALL PRIVILEGES ON DATABASE docker TO docker;
 
-DROP TABLE if exists users cascade;
-DROP TABLE if exists tasks cascade;
-
 create table users (
     id serial primary key,
     uuid varchar(64) not null unique,
@@ -51,27 +48,3 @@ create table subtasks (
     created_at timestamp not null,
     updated_at timestamp not null
 );
-
--- CREATE TYPE "routine_repeat_time" AS ENUM ('daily', 'weekly', 'monthly');
-
--- CREATE TYPE "routine_schedule" AS ENUM (
---     'anytime',
---     'morning',
---     'afternoon',
---     'nighttime'
--- );
-
--- create table routines (
---     id serial primary key,
---     uuid varchar(64) not null unique,
---     title varchar(255) not null,
---     color_tag varchar(64),
---     repeat_time routine_repeat_time,
---     repeat_time_interval int,
---     schedule routine_schedule,
---     completed boolean,
---     user_id integer references users(id),
---     created_at timestamp not null,
---     updated_at timestamp not null
--- ) -- psql -U gwp -f setup.sql -d gwp
--- =IF(D4 > 40, 40 * D4 + (E4 - 40) * 1.5*D4, D4*E4)

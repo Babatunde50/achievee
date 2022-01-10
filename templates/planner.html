@@ -1,7 +1,7 @@
 {{ define "content" }}
 
 <div class="container" style="background: #fcfdfc">
-  <nav class="side-nav">
+  {{/* <nav class="side-nav">
     <div
       class="
         nav-is-active
@@ -38,7 +38,7 @@
         My Notes
       </p>
     </div>
-  </nav>
+  </nav> */}}
 
   <div class="is-flex is-justify-content-space-between is-align-content-center">
     <span class="material-icons is-hidden-tablet"> menu </span>
@@ -47,7 +47,7 @@
       <p class="is-size-6 has-text-weight-semibold px-2 mt-2">
         {{ .User.FirstName }} {{ .User.LastName }}
       </p>
-      <div class="user-avatar"> B </div>
+      <div class="user-avatar" onclick="logout()" > B </div>
     </div>
   </div>
 

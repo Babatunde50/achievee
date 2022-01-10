@@ -81,6 +81,7 @@
   padding-top: 4rem;
   align-items: flex-start;
   z-index: 99999999999;
+  display: none;
 }
 
 .nav-is-active {

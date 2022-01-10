@@ -96,18 +96,19 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	// create a new random session token
 	sessionToken := createUUID()
 
-	_, err = cache.Do("SETEX", sessionToken, "300", user.Email)
+	_, err = cache.Do("SET", sessionToken, user.Email)
 
 	if err != nil {
-		respond(w, message(false, err.Error()), http.StatusInternalServerError)
-		return
+		panic(err)
+		// respond(w, message(false, err.Error()), http.StatusInternalServerError)
+		// return
 	}
 
 	cookie := http.Cookie{
 		Name:     "session_token",
 		Value:    sessionToken,
 		HttpOnly: true,
-		Expires:  time.Now().Add(7 * time.Hour),
+		Expires:  time.Now().Add(72 * time.Hour),
 		Path:     "/",
 	}
 
@@ -128,7 +129,7 @@ func refreshToken(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	newSessionToken := createUUID()
 
-	_, err := cache.Do("SETEX", newSessionToken, "300", userEmail)
+	_, err := cache.Do("SET", newSessionToken, userEmail)
 
 	if err != nil {
 		respond(w, message(false, err.Error()), http.StatusInternalServerError)
@@ -146,7 +147,7 @@ func refreshToken(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	http.SetCookie(w, &http.Cookie{
 		Name:    "session_token",
 		Value:   newSessionToken,
-		Expires: time.Now().Add(300 * time.Second),
+		Expires: time.Now().Add(72 * time.Hour),
 	})
 }
 
@@ -164,9 +165,11 @@ func logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	cookie := http.Cookie{
-		Name:    "session_token",
-		Value:   "",
-		Expires: time.Unix(0, 0),
+		Name:     "session_token",
+		Value:    "",
+		HttpOnly: true,
+		Expires:  time.Now(),
+		Path:     "/",
 	}
 
 	http.SetCookie(w, &cookie)

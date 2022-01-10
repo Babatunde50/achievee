@@ -6,7 +6,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
+	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 )
 
@@ -15,14 +17,12 @@ var Db *sql.DB
 func init() {
 	var err error
 
-	Db, err = sql.Open("postgres", "user=user password=password host=db dbname=db port=5432 sslmode=verify-full")
+	Db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
 
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
-
-	fmt.Print(Db, "db")
 }
 
 // create a random UUID with from RFC 4122

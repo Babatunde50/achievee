@@ -10,5 +10,6 @@ require (
 
 require (
 	github.com/gomodule/redigo v1.8.6 // indirect
+	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/rs/cors v1.8.0 // indirect
 )
