@@ -8,6 +8,7 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
+      POSTGRES_DB: user
     container_name: postgresdb
     volumes:
       - dbdata:/var/lib/postgresql/data
@@ -16,6 +17,10 @@ services:
     build: .
     ports:
       - '8081:8081'
+    environment:
+      - REDISCLOUD_URL=redis://redis
+      - DATABASE_URL=user=user password=password host=db dbname=db port=5432 sslmode=verify-full
+      - PORT=8081
     depends_on:
       - postgres
       - redis
